@@ -30,13 +30,15 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys('Buy dat good gud gud')
         # User hits enter, page updates, and now page lists the item on table
         inputbox.send_keys(Keys.ENTER)
+        # User enters another item to the list
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('JaRule')
+        inputbox.send_keys(Keys.ENTER)
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: Buy dat good gud gud' for row in rows),
-            "New to-do item did not appear in table"
-        )
+        self.assertIn('1: Buy dat good gud gud', [row.text for row in rows])
+        self.assertIn('2: JaRule', [row.text for row in rows])
         # there is still a text box for user to enter more items
         self.fail('Finish the test!')
 
